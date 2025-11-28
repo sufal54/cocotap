@@ -1,0 +1,46 @@
+{
+  // RUST ANALYZER (only on src-tauri)
+  "rust-analyzer.cargo.loadOutDirsFromCheck": true,
+  "rust-analyzer.procMacro.enable": true,
+  "rust-analyzer.checkOnSave.enable": false,
+  "rust-analyzer.linkedProjects": ["src-tauri/Cargo.toml"],
+
+  // NEXT.JS / TYPESCRIPT
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "javascript.suggest.autoImports": true,
+  "typescript.suggest.autoImports": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.useTabs": false,
+
+  // Enable Next.js IntelliSense
+  "nextjs.codeLens.enable": true,
+
+  // FILE WATCH PERFORMANCE
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.next/**": true,
+    "**/target/**": true
+  },
+
+  // Don't search inside huge folders
+  "search.exclude": {
+    "node_modules": true,
+    ".next": true,
+    "target": true
+  },
+
+  // Disable ESLint running full project on save
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.lintTask.enable": false,
+
+  // Avoid TypeScript server overload
+  "typescript.tsserver.maxTsServerMemory": 2048,
+
+  // Reduce VS Code CPU cost
+  "explorer.compactFolders": false
+}
