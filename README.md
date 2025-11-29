@@ -63,7 +63,7 @@ chmod +x build.sh
 
 # 🧠 How Rule Builder Works
 
-User fills the form → App generates iptables command.
+User fills the form.
 
 | Field
 
