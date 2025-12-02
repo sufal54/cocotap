@@ -4,14 +4,15 @@ use std::process::{ Child, ChildStdin, ChildStdout, Command, Stdio };
 use std::sync::{ Arc, Mutex };
 
 #[derive(Clone)]
-pub struct IptablesShell {
-    stdin: Arc<Mutex<ChildStdin>>,
-    stdout: Arc<Mutex<BufReader<ChildStdout>>>,
-    _child: Arc<Child>,
+pub struct PkexecShell {
+    stdin: Arc<Mutex<ChildStdin>>, // stdin
+    stdout: Arc<Mutex<BufReader<ChildStdout>>>, // stdout
+    _child: Arc<Child>, // To alive child
 }
 
-impl IptablesShell {
+impl PkexecShell {
     pub fn new() -> Result<Self> {
+        // Create new Pkexec terminal
         let mut child = Command::new("pkexec")
             .arg("bash")
             .stdin(Stdio::piped())
@@ -22,6 +23,7 @@ impl IptablesShell {
 
         let stdin = child.stdin.take().ok_or_else(|| anyhow!("failed to get stdin"))?;
         let stdout = child.stdout.take().ok_or_else(|| anyhow!("failed to get stdout"))?;
+        // wrap stdout with Buffer-Reader
         let reader = BufReader::new(stdout);
 
         Ok(Self {
@@ -31,18 +33,19 @@ impl IptablesShell {
         })
     }
 
+    // Execution of command
     fn run_cmd(&self, cmd: &str) -> Result<String> {
         let mut stdin = self.stdin.lock().unwrap();
         let mut stdout = self.stdout.lock().unwrap();
-        println!("{}", cmd);
-        let marker = "END_OF_CMD";
+        let marker = "END_OF_CMD"; // Mark of command ends
         writeln!(stdin, "{}; echo {}", cmd, marker)?;
-        stdin.flush()?;
+        stdin.flush()?; // Flush the stdio
 
         let mut output = String::new();
         let lines_iter = (&mut *stdout).lines();
         for line_result in lines_iter {
             let line: String = line_result?;
+            // Triger the end
             if line == marker {
                 break;
             }
@@ -53,6 +56,7 @@ impl IptablesShell {
         Ok(output)
     }
 
+    // List of rules on table and chain
     pub fn list_rules(&self, table: &str, chain: &str) -> Result<Vec<String>> {
         let out = self.run_cmd(&format!("iptables -t {} -L {} -n --line-numbers", table, chain))?;
         Ok(
@@ -62,12 +66,12 @@ impl IptablesShell {
                 .collect()
         )
     }
-
+    // Add rules
     pub fn add_rule(&self, table: &str, chain: &str, rule: &str) -> Result<()> {
         self.run_cmd(&format!("iptables -t {} -A {} {}", table, chain, rule))?;
         Ok(())
     }
-
+    // Delete rule by number
     pub fn delete_rule(&self, table: &str, chain: &str, line: &str) -> Result<()> {
         self.run_cmd(&format!("iptables -t {} -D {} {}", table, chain, line))?;
         Ok(())

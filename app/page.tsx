@@ -9,8 +9,9 @@ const TABLES = ["filter", "nat"
   // , "mangle"
 
 ];
-const CHAINS = ["INPUT", "OUTPUT",
-  "FORWARD", "PREROUTING", "POSTROUTING"
+const CHAINS = ["INPUT", "FORWARD",
+  "OUTPUT",
+  "PREROUTING", "POSTROUTING"
 ];
 
 export default function Home() {
@@ -123,7 +124,13 @@ export default function Home() {
             value={chain}
             onChange={(e) => setChain(e.target.value)}
           >
-            {CHAINS.map((c) => <option key={c} value={c}>{c}</option>)}
+            {
+              table !== "nat" ? (
+                CHAINS.slice(0, 3).map((c) => <option key={c} value={c}>{c}</option>)
+              ) : (
+                CHAINS.slice(2).map((c) => <option key={c} value={c}>{c}</option>)
+              )
+            }
           </select>
 
           <button onClick={loadRules} className="px-3 py-2 rounded-lg bg-blue-700 hover:bg-blue-600 text-white font-semibold shadow-sm flex items-center gap-2" disabled={loading}>
@@ -158,17 +165,21 @@ export default function Home() {
             value={action}
             onChange={(e) => setAction(e.target.value)}
           >
-            <option>ACCEPT</option>
-            <option>REJECT</option>
-            <option>DROP</option>
+
 
             {/*Under Test*/}
             {
-              table === "nat" && (
+              table === "nat" ? (
                 <>
                   <option>DNAT</option>
                   <option>SNAT</option>
                   <option>MASQUERADE</option></>
+              ) : (
+                <>
+                  <option>ACCEPT</option>
+                  <option>REJECT</option>
+                  <option>DROP</option>
+                </>
               )
             }
           </select>

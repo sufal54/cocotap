@@ -1,13 +1,13 @@
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 mod firewall;
-use firewall::IptablesShell;
+use firewall::PkexecShell;
 
 use once_cell::sync::Lazy;
 use std::sync::Mutex;
 use tauri::Manager;
 
-static SHELL: Lazy<Mutex<IptablesShell>> = Lazy::new(|| {
-    Mutex::new(IptablesShell::new().expect("failed to start pkexec shell"))
+static SHELL: Lazy<Mutex<PkexecShell>> = Lazy::new(|| {
+    Mutex::new(PkexecShell::new().expect("failed to start pkexec shell"))
 });
 
 #[tauri::command]
