@@ -65,13 +65,12 @@ chmod +x build.sh
 
 User fills the form.
 
-| Field
-
-| Protocol = tcp  
-| Source IP = 10.0.0.5  
-| Port = 443  
-| Action = DROP  
-| Comment = "Block HTTPS"
+Field
+Protocol = tcp  
+Source IP = 10.0.0.5  
+Port = 443  
+Action = DROP  
+Comment = "Block HTTPS"
 
 # 📜 License
 
