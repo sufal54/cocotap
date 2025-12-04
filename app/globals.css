@@ -16,13 +16,23 @@ html.dark {
   --border: #333333;
 }
 
-/* Apply global theme variables */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  scrollbar-width: none;
+}
+
+* {
+  -ms-overflow-style: none;
+}
+
 body {
   background: var(--bg);
   color: var(--text);
 }
 
-/* Utility classes */
 .card {
   background: var(--card-bg);
   border: 1px solid var(--border);
